@@ -10,17 +10,17 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = express.Router()
 
 router
-  .route('/')
-  .post(registerUser)
+  .route('/register')
+  .post(registerUser);
 
 router
   .route('/login')
-  .post(loginUser)
+  .post(loginUser);
 
 //Note: Secure Routes
 
 router
   .route('/logout')
-  .post(verifyJWT, logoutUser)
+  .post(verifyJWT, logoutUser);
 
 export default router;
