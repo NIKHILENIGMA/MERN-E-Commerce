@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/apiResponse.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 /**
  * Asynchronously generates access and refresh tokens for a user.
@@ -21,7 +21,7 @@ const generateAccessRefreshToken = async(userId)=> {
        await user.save({
         validateBeforeSave: false,
        })
-
+       
        return {accessToken, refreshToken}
 
     } catch (error) {
@@ -115,6 +115,11 @@ const loginUser = asyncHandler(async(req,res) => {
     }
 
     const {accessToken, refreshToken} = await generateAccessRefreshToken(user._id)
+    
+    // Promise to resolve
+    const actualAccessToken = await accessToken
+    const actualRefreshToken = await refreshToken
+    // console.log("Access TOken",actualAccessToken,"Refresh Token", actualRefreshToken);
 
     const loggedInUser =await User.findById(user._id).select("-password -refreshToken")
 
@@ -125,13 +130,15 @@ const loginUser = asyncHandler(async(req,res) => {
 
     return res
     .status(200)
-    .cookie("accessToken",accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken",actualAccessToken, options)
+    .cookie("refreshToken", actualRefreshToken, options)
     .json(
         new ApiResponse(
             200,
             {
-                user: loggedInUser, accessToken, refreshToken
+                user: loggedInUser, 
+                accessToken: actualAccessToken, 
+                refreshToken: actualRefreshToken,
             },
             "User Login Successfully"
         )
