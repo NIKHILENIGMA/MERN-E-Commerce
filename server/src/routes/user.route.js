@@ -1,8 +1,11 @@
 import express from "express";
 import { 
-    loginUser, 
-    logoutUser, 
-    registerUser 
+  getAllUsers,
+  getCurrentUser,
+  loginUser, 
+  logoutUser, 
+  refreshAccessToken, 
+  registerUser 
 } from "../controllers/user.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -22,5 +25,17 @@ router
 router
   .route('/logout')
   .post(verifyJWT, logoutUser);
+
+router
+  .route('/refresh-token')
+  .post(refreshAccessToken)
+
+router
+  .route('/current-user')
+  .get(verifyJWT,getCurrentUser)
+
+router
+  .route('/get-all-users')
+  .get(verifyJWT, getAllUsers)
 
 export default router;
