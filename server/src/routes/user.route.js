@@ -1,11 +1,13 @@
 import express from "express";
 import { 
+  changeCurrentPassword,
   getAllUsers,
   getCurrentUser,
   loginUser, 
   logoutUser, 
   refreshAccessToken, 
-  registerUser 
+  registerUser, 
+  updateAccountDetails
 } from "../controllers/user.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -31,11 +33,18 @@ router
   .post(refreshAccessToken)
 
 router
-  .route('/current-user')
+  .route('/profile')
   .get(verifyJWT,getCurrentUser)
+  .patch(verifyJWT, updateAccountDetails)
+
+router
+  .route('/profile/change-password')
+  .patch(verifyJWT, changeCurrentPassword)
 
 router
   .route('/get-all-users')
   .get(verifyJWT, getAllUsers)
 
 export default router;
+
+// Create a single API route 'Profile' which can handle both 
