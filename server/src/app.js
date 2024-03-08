@@ -20,8 +20,10 @@ app.use(cookieParser())
 
 /// Api routes
 import userRouters from "./routes/user.route.js"
+import categoryRouters from "./routes/category.route.js"
 
 app.use("/api/v1/users", userRouters);
+app.use("/api/v1/category", categoryRouters);
 
 
 
