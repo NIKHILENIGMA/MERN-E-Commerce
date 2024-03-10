@@ -36,6 +36,12 @@ const userSchema = new Schema(
         default: false,
 
     },
+
+    address:{
+        type: mongoose.Types.ObjectId,
+        ref: 'ShippingAddress',
+
+    },
     refreshToken:{
         type: String,
     },
