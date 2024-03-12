@@ -85,7 +85,7 @@ const updateCategory = asyncHandler(async (req, res) => {
         )
 } catch (error) {
     throw new ApiError(
-        401, 
+        500, 
         "Catergory updation failed" ||  error?.message
     )
 }
