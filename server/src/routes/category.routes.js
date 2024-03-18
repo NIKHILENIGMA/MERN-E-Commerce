@@ -28,7 +28,7 @@ router
 
   router
   .route('/categories/:id')
-  .get(readCategory)
+  .get(verifyJWT, isAdmin, readCategory)
 
 
 
