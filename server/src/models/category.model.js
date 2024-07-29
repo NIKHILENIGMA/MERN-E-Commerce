@@ -9,6 +9,9 @@ const categorySchema = new Schema(
             unique: true,
 
         },
+        status: {
+            type: Boolean,  
+        }
 
      }, 
     { 
