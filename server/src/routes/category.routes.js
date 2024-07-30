@@ -1,35 +1,42 @@
-import express from 'express'; 
+// Import Packages
+import express from "express";
 
-import { verifyJWT } from '../middlewares/auth.middleware.js';
-import { 
-  createCategory, 
+// Import Controllers
+import {
+  createCategory,
   updateCategory,
   destroyCategory,
-  listCategories,  
+  listAllCategories,
   readCategory,
-  
-} from '../controllers/category.controller.js';
-import { isAdmin } from '../middlewares/admin.middleware.js';
+} from "../controllers/category.controller.js";
 
+// Import Middlewares
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { isAdmin } from "../middlewares/admin.middleware.js";
+import { isValidId } from "../middlewares/isValidId.js";
 const router = express.Router();
 
+//TODO Include verifyJWT and isAdmin both middleware 
+/// Add Category route
+router.route("/add").post(createCategory);
+
+//TODO Include verifyJWT and isAdmin both middleware
+/// Update and delete Category route
 router
-  .route('/')
-  .post(verifyJWT, isAdmin , createCategory)
+  .route("/:id")
+  .patch(isValidId("category"),updateCategory)
+  .delete(isValidId("category"),destroyCategory);
 
+/// Get all Categories route
+//TODO Include verifyJWT and isAdmin both middleware
 router
-  .route('/:id')
-  .patch(verifyJWT, isAdmin, updateCategory)
-  .delete(verifyJWT, isAdmin, destroyCategory)
+  .route("/")
+  .get(listAllCategories);
 
+/// Get a particular Category route
+// TODO Include verifyJWT and isAdmin both middleware
 router
-  .route('/categories')
-  .get(listCategories)
-
-  router
-  .route('/categories/:id')
-  .get(verifyJWT, isAdmin, readCategory)
-
-
+  .route("/:id")
+  .get(isValidId("category"), readCategory);
 
 export default router;
