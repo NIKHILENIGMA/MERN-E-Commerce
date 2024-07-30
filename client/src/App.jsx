@@ -1,14 +1,7 @@
-import { useState } from 'react'
-
-import './App.css'
+import ProjectRoutes from "./Routes.jsx";
 
 function App() {
-
-  return (
-    <>
-      
-    </>
-  )
+  return <ProjectRoutes />;
 }
 
-export default App
+export default App;
