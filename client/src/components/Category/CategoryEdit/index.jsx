@@ -99,7 +99,3 @@ EditCategory.propTypes = {
 };
 
 export default EditCategory;
-
-/**
- *
- */
