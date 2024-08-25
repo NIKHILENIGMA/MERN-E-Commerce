@@ -1,7 +1,7 @@
 import { asyncHandler }  from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model.js";
+import { Customer } from "../models/customer.model.js";
 
 /**
  * Middleware function to verify JSON Web Token (JWT) and authenticate user.
@@ -19,33 +19,48 @@ import { User } from "../models/user.model.js";
 
 export const verifyJWT = asyncHandler(async (req, _, next) => {
     try {
-    //   console.log("Token value",req.cookies?.accessToken);
+      // console.log("verifyJWT at 22: Token value from cookies: ",req.cookies?.accessToken);
+      // console.log("verifyJWT at 23: Token value from Headers: ",req.header("Authorization"));
+      
+      // if req.cookies?.accessToken or req.header("Authorization") exists then take out the token
       const token =
         req.cookies?.accessToken ||
         req.header("Authorization")?.replace("Bearer ","");
-  
+      
+      // if token does not exist throw error
       if (!token) {
         throw new ApiError(401, "Unauthorized request in authentication");
       }
 
+      // if token is not a string throw error
       if (typeof token !== 'string') {
         throw new ApiError(400, "Token must be a string")
       }
-  
-      const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      
+      // verify the access token with the secret key
+      const decodedToken = jwt.verify(
+        token, 
+        process.env.ACCESS_TOKEN_SECRET
+      );
       
       // console.log(JSON.stringify(decodedToken));
-      const user = await User.findById(decodedToken?._id).select(
+
+      // Since the JWT is valid, decodedToken will contain the user ID and fetch the user details from the database
+      const customer = await Customer.findById(decodedToken?._id).select(
         "-password -refreshToken"
       );
-  
-      if (!user) {
+
+      // if user does not exist throw error 
+      if (!customer) {
         throw new ApiError(401, "Invalid Access token");
       }
-      //@ Custome middleware 
-      req.user = user
+      
+      // attach the user details to the request object and call the next middleware
+      req.customer = customer
       next()
+      
     } catch (error) {
+      // if error occurs throw error
       throw new ApiError(401, error?.message || "Invalid access token")
     } 
   });
