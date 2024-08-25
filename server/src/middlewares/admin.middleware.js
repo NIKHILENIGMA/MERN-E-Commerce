@@ -1,5 +1,5 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 
 /**
  * Middleware to check if the current user is an administrator.
@@ -11,11 +11,18 @@ import { ApiError } from "../utils/ApiError";
  * @throws {ApiError} Throws a 401 error if the user is not logged in, or a 403 error if the user is not an administrator.
  */
 const isAdmin = asyncHandler(async (req, _, next) => {
-  if (!req.user) {
-    throw new ApiError(401, "User must be logged in");
-  }
-  if (req.user && !req.user.isAdmin) {
-    throw new ApiError(403, "User does not have administrative privileges");
+  if (!req.customer) {
+    throw new ApiError(
+      401, 
+      "User must be logged in"
+    );
+  };
+  
+  if (req.customer && !req.customer?.isAdmin) {
+    throw new ApiError(
+      403, 
+      "Customer does not have administrative privileges"
+    );
   }
   next();
 });
